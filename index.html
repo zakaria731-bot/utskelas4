@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ulangan Tengah Semester - Kelas 4</title>
+  <style>
+    :root{--accent:#2b6cb0;--muted:#666}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; margin:0;background:#f7fafc;color:#0f172a}
+    header{background:linear-gradient(90deg,#fff,#eef2ff);padding:22px;border-bottom:1px solid #e6edf3}
+    .container{max-width:980px;margin:28px auto;padding:18px}
+    h1{margin:0 0 6px;font-size:22px}
+    p.lead{margin:0;color:var(--muted)}
+    .card{background:#fff;border:1px solid #e6edf3;border-radius:10px;padding:16px;margin-top:18px;box-shadow:0 4px 14px rgba(15,23,42,0.03)}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:10px;border-bottom:1px solid #f0f4f8;text-align:left}
+    th{background:#fbfdff;font-weight:600}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    button{background:var(--accent);color:#fff;border:0;padding:8px 10px;border-radius:8px;cursor:pointer}
+    button.ghost{background:transparent;color:var(--accent);border:1px solid #cfe0fb}
+    input[type=text]{padding:8px;border-radius:8px;border:1px solid #dbe7fb;width:100%}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    .small{font-size:13px;color:var(--muted)}
+    .subject-badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6ff;color:var(--accent);font-weight:600}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr} .container{padding:12px}}
+    .preview a{display:inline-block;margin-right:8px;margin-top:6px;text-decoration:none;padding:6px 10px;border-radius:8px;border:1px dashed #cfe0fb;color:var(--accent)}
+    .code-pill{background:#f4f7ff;padding:6px 8px;border-radius:6px;font-weight:700;display:inline-block}
+    /* Print Styles */
+    @media print {
+      header, aside, #addBtn, #clearBtn, #exportBtn, #printBtn, .actions button, .card:nth-of-type(2) {display:none !important;}
+      body{background:#fff;color:#000}
+      .card{box-shadow:none;border:1px solid #000}
+      table{border:1px solid #000}
+      th,td{border:1px solid #000}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Website Ulangan Tengah Semester — Kelas 4</h1>
+      <p class="lead">Halaman ini memudahkan membuat daftar mata pelajaran, menambahkan link Google Form, dan menampilkan bagan/daftar yang bisa dicetak atau dibagikan.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="small">Sekolah / Kelas</div>
+              <strong>SD - Kelas 4</strong>
+              <div class="small">Tahun Pelajaran: ______</div>
+            </div>
+            <div style="text-align:right">
+              <div class="small">Cetak / Bagikan</div>
+              <div class="actions" style="justify-content:flex-end">
+                <button id="printBtn">Cetak</button>
+                <button id="exportBtn" class="ghost">Export CSV</button>
+                <button id="clearBtn" class="ghost">Bersihkan Data</button>
+              </div>
+            </div>
+          </div>
+
+          <hr style="margin:12px 0;border:none;border-top:1px solid #f1f6fb">
+
+          <h3 style="margin:4px 0">Bagan Mata Pelajaran</h3>
+          <div class="small">Gunakan tombol "Tambah Mata Pelajaran" untuk menambah. Klik ikon edit untuk mengisi link Google Form.</div>
+
+          <table id="subjectsTable">
+            <thead>
+              <tr><th>Mata Pelajaran</th><th>Kode</th><th>Waktu (menit)</th><th>Link Google Form</th><th>Aksi</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button id="addBtn">Tambah Mata Pelajaran</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3>Preview Halaman UTS</h3>
+          <div id="previewArea" class="preview small">Tidak ada mata pelajaran. Tambah mata pelajaran untuk melihat preview.</div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h3>Form Tambah / Edit</h3>
+          <div style="display:grid;gap:8px">
+            <label>Nama Mata Pelajaran <input id="fieldName" type="text" placeholder="Contoh: Matematika"></label>
+            <label>Waktu (menit) <input id="fieldTime" type="text" placeholder="90"></label>
+            <label>Link Google Form <input id="fieldLink" type="text" placeholder="https://forms.gle/....."></label>
+            <div style="display:flex;gap:8px">
+              <button id="saveFieldBtn">Simpan</button>
+              <button id="cancelEditBtn" class="ghost">Batal</button>
+            </div>
+            <hr>
+            <div class="small">Petunjuk singkat:</div>
+            <ol class="small">
+              <li>Isi nama mata pelajaran, waktu, dan paste link Google Form (opsional).</li>
+              <li>Klik "Simpan". Data akan tersimpan di browser (localStorage).</li>
+              <li>Gunakan "Export CSV" untuk mengunduh daftar.</li>
+              <li>Gunakan tombol "Cetak" untuk mencetak bagan.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3>Contoh Mata Pelajaran</h3>
+          <div class="small" style="line-height:1.6">
+            - Bahasa Indonesia<br>
+            - Matematika<br>
+            - Ilmu Pengetahuan Alam (IPA)<br>
+            - Ilmu Pengetahuan Sosial (IPS)<br>
+            - PPKn<br>
+            - SBK<br>
+            - PJOK<br>
+            - Bahasa Inggris
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="small">Dibuat otomatis — sesuaikan data sebelum disebarkan. Halaman ini berjalan sepenuhnya di browser (offline) dan menyimpan data di peramban Anda.<br>Versi siap unggah ke <strong>GitHub Pages</strong>.</div>
+    </footer>
+  </main>
+
+  <script>
+    // Helper: generate code from title
+    function generateCode(name){
+      const parts = name.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
+      const num = Math.floor(1000 + Math.random()*9000);
+      return parts + '-' + num;
+    }
+
+    // Storage key
+    const STORAGE_KEY = 'uts_kelas4_subjects_v1';
+    let subjects = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let editIndex = -1;
+
+    const tbody = document.querySelector('#subjectsTable tbody');
+    const preview = document.getElementById('previewArea');
+
+    function render(){
+      tbody.innerHTML = '';
+      if(subjects.length === 0){
+        tbody.innerHTML = '<tr><td colspan="5" class="small">Belum ada mata pelajaran</td></tr>';
+        preview.innerHTML = 'Tidak ada mata pelajaran. Tambah mata pelajaran untuk melihat preview.';
+        return;
+      }
+
+      subjects.forEach((s,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(s.name)}</strong><div class="small">${escapeHtml(s.desc || '')}</div></td>
+          <td><span class="code-pill">${escapeHtml(s.code)}</span></td>
+          <td>${escapeHtml(s.time || '')}</td>
+          <td>${s.link? `<a href="${escapeAttr(s.link)}" target="_blank">Buka Form</a>` : '<span class="small">-</span>'}</td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <button class="editBtn" data-i="${i}">Edit</button>
+              <button class="ghost deleteBtn" data-i="${i}">Hapus</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // preview
+      let html = '';
+      subjects.forEach((s)=>{
+        html += `<div style="margin-bottom:10px"><span class="subject-badge">${escapeHtml(s.name)}</span> &nbsp; <span class="small">(${escapeHtml(s.code)})</span><br>`;
+        html += `<div class="small">Waktu: ${escapeHtml(s.time || '-') } menit</div>`;
+        if(s.link) html += `<a href="${escapeAttr(s.link)}" target="_blank">Buka Google Form</a>`;
+        html += `</div>`;
+      });
+      preview.innerHTML = html;
+
+      // attach handlers
+      document.querySelectorAll('.editBtn').forEach(b=> b.addEventListener('click', onEdit));
+      document.querySelectorAll('.deleteBtn').forEach(b=> b.addEventListener('click', onDelete));
+
+      saveToStorage();
+    }
+
+    function saveToStorage(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(subjects));
+    }
+
+    function onEdit(e){
+      const i = Number(e.currentTarget.dataset.i);
+      editIndex = i;
+      const s = subjects[i];
+      document.getElementById('fieldName').value = s.name;
+      document.getElementById('fieldTime').value = s.time || '';
+      document.getElementById('fieldLink').value = s.link || '';
+      document.getElementById('saveFieldBtn').textContent = 'Perbarui';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function onDelete(e){
+      const i = Number(e.currentTarget.dataset.i);
+      if(confirm('Hapus mata pelajaran "'+subjects[i].name+'"?')){
+        subjects.splice(i,1);
+        render();
+      }
+    }
+
+    // escape helpers
+    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function escapeAttr(s){ return String(s).replace(/"/g,'%22'); }
+
+    // add empty
+    document.getElementById('addBtn').addEventListener('click', ()=>{
+      const name = prompt('Nama mata pelajaran:');
+      if(!name) return;
+      subjects.push({name:name, time:'', link:'', code:generateCode(name)});
+      render();
+    });
+
+    document.getElementById('saveFieldBtn').addEventListener('click', ()=>{
+      const name = document.getElementById('fieldName').value.trim();
+      const time = document.getElementById('fieldTime').value.trim();
+      const link = document.getElementById('fieldLink').value.trim();
+      if(!name){ alert('Isi nama mata pelajaran.'); return; }
+      if(editIndex >= 0){
+        subjects[editIndex].name = name;
+        subjects[editIndex].time = time;
+        subjects[editIndex].link = link;
+        // keep code
+        editIndex = -1;
+        document.getElementById('saveFieldBtn').textContent = 'Simpan';
+      } else {
+        subjects.push({name:name,time:time,link:link,code:generateCode(name)});
+      }
+      document.getElementById('fieldName').value='';
+      document.getElementById('fieldTime').value='';
+      document.getElementById('fieldLink').value='';
+      render();
+    });
+
+    document.getElementById('cancelEditBtn').addEventListener('click', ()=>{
+      editIndex = -1;
+      document.getElementById('fieldName').value='';
+      document.getElementById('fieldTime').value='';
+      document.getElementById('fieldLink').value='';
+      document.getElementById('saveFieldBtn').textContent = 'Simpan';
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', ()=>{
+      if(confirm('Hapus semua data mata pelajaran dari penyimpanan?')){
+        subjects = [];
+        saveToStorage();
+        render();
+      }
+    });
+
+    document.getElementById('printBtn').addEventListener('click', ()=>{
+      window.print();
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', ()=>{
+      if(subjects.length===0){ alert('Tidak ada data untuk diexport.'); return; }
+      let csv = 'Mata Pelajaran,Kode,Waktu (menit),Link\n';
+      subjects.forEach(s=> csv += `"${s.name.replace(/"/g,'""')}","${s.code}","${s.time}","${s.link}"\n`);
+      const blob = new Blob([csv],{type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='uts_kelas4_subjects.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    // initial render
+    render();
+  </script>
+</body>
+</html>
